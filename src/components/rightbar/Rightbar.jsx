@@ -1,9 +1,9 @@
-import "./sidebar.css";
+import "./rightbar.css";
 
-export default function Sidebar(){
+export default function Rightbar(){
     return (
-        <div>
-            sidebar
+        <div className="rightbar">
+            rightbar
         </div>
 
     )
