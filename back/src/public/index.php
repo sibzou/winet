@@ -62,7 +62,7 @@
             return;
         }
 
-        if($method == "GET" && $uri == "/search") {
+        if($method == "POST" && $uri == "/search") {
             $stmt = $db->prepare("select wine.id, wine.name as name, category.name as category from wine, category, vineyard, color where wine.categoryId = category.id and wine.vineyardId = vineyard.id and wine.colorId = color.id and (wine.name like :query or vineyard.name like :query or color.name like :query)");
             $stmt->bindValue("query", "%" . $input->query . "%");
 

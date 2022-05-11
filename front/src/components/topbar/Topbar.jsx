@@ -5,7 +5,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import ChatIcon from '@mui/icons-material/Chat';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
-export default function Topbar(){
+export default function Topbar(props){
     return(
         <div className="topbarContainer">
             <div className="topbarLeft">
@@ -15,7 +15,7 @@ export default function Topbar(){
             <div className="topbarCenter">
                 <div className="searchbar">
                     <SearchIcon className="searchIcon"/>
-                    <input type="text" placeholder="Search for a wine,vineyard or friend" className="searchInput" />
+                    <input type="text" placeholder="Search for a wine,vineyard or friend" className="searchInput" onChange={event => props.onSearchChange(event.target.value)}/>
                 </div>
             </div>
             <div className="topbarRight">

@@ -9,7 +9,7 @@ function App() {
 
   if (token!=null) {
     console.log(token)
-    return <Home />;
+    return <Home token={token}/>;
   } else {
     return <Login setTokenCallback={setToken} />;
   }
