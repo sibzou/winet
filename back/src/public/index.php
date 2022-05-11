@@ -85,6 +85,21 @@
             }
 
             echo json_encode($searchArray);
+        } else if($method == "POST" && $uri == "/rate") {
+            if($input->rate < 0 || $input->rate > 10) {
+                http_response_code(500);
+                return;
+            }
+
+            $stmt = $db->prepare("insert into rate values(:userId, :wineId, :rate)");
+
+            $stmt->bindValue("userId", $sessionUid);
+            $stmt->bindValue("wineId", $input->wineId);
+            $stmt->bindValue("rate", $input->rate);
+
+            if(!$stmt->execute()) {
+                http_response_code(500);
+            }
         } else {
             echoNotFound();
         }
