@@ -56,8 +56,7 @@ create table commentLike(
 create table session(
     id integer primary key,
     userId integer references user(id),
-    token text not null,
-    start integer not null
+    token text not null
 );
 
 insert into category(name) values("rosé"),

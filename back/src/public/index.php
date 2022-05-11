@@ -1,5 +1,6 @@
 <?php
     header('Access-Control-Allow-Origin: http://localhost:3000');
+   // error_reporting(0);
 
     $method = $_SERVER["REQUEST_METHOD"];
     $uri = $_SERVER["REQUEST_URI"];
@@ -8,8 +9,6 @@
     $input = json_decode($inputJson);
 
     $db = new SQLite3("../../db");
-
-    $stmt = $db->query("delete from session where start + " . (60 * 20) . " < unixepoch()");
 
     function echoNotFound() {
         http_response_code(404);
@@ -38,7 +37,7 @@
             return;
         }
 
-        $stmt = $db->prepare("insert into session(userId, token, start) values(:userid, :token, unixepoch())");
+        $stmt = $db->prepare("insert into session(userId, token) values(:userid, :token)");
         $token = bin2hex(random_bytes(8));
 
         $stmt->bindValue("userid", $row["id"]);
@@ -56,10 +55,6 @@
         $res = $stmt->execute();
         $row = $res->fetchArray();
         $sessionUid = $row["userId"];
-
-        $stmt = $db->prepare("update session set start = unixepoch() where userId = :userId");
-        $stmt->bindValue("userId", $sessionUid);
-        $stmt->execute();
 
         if(!isset($sessionUid)) {
             echoNotFound();
