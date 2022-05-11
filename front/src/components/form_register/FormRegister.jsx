@@ -5,20 +5,23 @@ import $ from "jquery";
 
 export default function FormRegister() {
 
+
+
     // States for registration
-    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const [result, setResult] = useState("");
+    const [error, setError] = useState(false);
+
 
 
     // States for checking the errors
     const [submitted, setSubmitted] = useState(false);
-    const [error, setError] = useState(false);
 
     // Handling the name change
     const handleName = (e) => {
-        setName(e.target.value);
+        setUsername(e.target.value);
         setSubmitted(false);
     };
 
@@ -30,21 +33,22 @@ export default function FormRegister() {
 
     const handleSumbit = (e) => {
         e.preventDefault();
-        if (name === '' || password === '') {
-            setError(true);
-        } else {
-            setSubmitted(true);
-            setError(false);
-        }
         const form = $(e.target);
         $.ajax({
             type: "POST",
             url: form.attr("action"),
-            data: form.serialize(),
-            success(data) {
+            datatype: "json",
+            data: JSON.stringify({username: username, password: password}),
+            success: function (data) {
                 setResult(data);
+                setError(false);
+                setSubmitted(true);
             },
-        });
+            error: function () {
+                setSubmitted(false)
+                setError(true);
+            }
+        })
     };
 
     // Showing success message
@@ -55,7 +59,7 @@ export default function FormRegister() {
                 style={{
                     display: submitted ? '' : 'none',
                 }}>
-                <h1>User {name} successfully registered!!</h1>
+                <h1>User {username} successfully registered!!</h1>
             </div>
         );
     };
@@ -68,7 +72,7 @@ export default function FormRegister() {
                 style={{
                     display: error ? '' : 'none',
                 }}>
-                <h1>Please enter all the fields</h1>
+                <h1>Username already exist</h1>
             </div>
         );
     };
@@ -84,13 +88,13 @@ export default function FormRegister() {
                 onSubmit={(event) => handleSumbit(event)}
             >
                 {/* Labels and inputs for form data */}
-                <label className="label">Name</label>
+                <label className="label">Username</label>
                 <input onChange={handleName} className="input"
-                       value={name} type="text"/>
+                       value={username} type="text" id="username" name="username"/>
 
                 <label className="label">Password</label>
                 <input onChange={handlePassword} className="input"
-                       value={password} type="password"/>
+                       value={password} type="password" id="password" name="password"/>
 
                 <button className="btn" type="submit">
                     Submit
