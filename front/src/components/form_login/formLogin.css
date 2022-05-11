@@ -1,0 +1,58 @@
+.Form {
+    text-align: center;
+    background-color:white;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 50px;
+    margin-left: 250px;
+    margin-right: 250px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+}
+
+.label{
+    display: block;
+    font-size: larger;
+    color: black;
+    padding: 5px;
+}
+
+.input{
+    font-size: larger;
+    padding: 5px;
+    margin: 2px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+.btn{
+    color: white;
+    background-color: blue;
+    border-radius: 5px;
+    font-size: larger;
+    display: block;
+    padding: 5px;
+    margin: 10px auto;
+}
+
+.messages{
+    display: flex;
+    justify-content: center;
+}
+
+.error{
+    display: block;
+    background-color: red;
+    color: white;
+    width: fit-content;
+    height: 50px;
+    padding: 5px;
+}
+
+.success{
+    display: block;
+    background-color: lightblue;
+    color: black;
+    width: fit-content;
+    height: 50px;
+    padding: 5px;
+}
