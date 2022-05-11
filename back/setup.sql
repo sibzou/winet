@@ -23,7 +23,7 @@ create table color(
 
 create table user(
     id integer primary key,
-    name text not null,
+    name text not null unique,
     password text not null
 );
 
@@ -51,6 +51,13 @@ create table commentLike(
     userId integer references user(id),
     commentId integer references comment(id),
     primary key(userId, commentId)
+);
+
+create table session(
+    id integer primary key,
+    userId integer references user(id),
+    token text not null,
+    start integer not null
 );
 
 insert into category(name) values("rosé"),
