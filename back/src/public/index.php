@@ -9,6 +9,7 @@
     $input = json_decode($inputJson);
 
     $db = new SQLite3("../../db");
+    $db->query("pragma foreign_keys = on");
 
     function echoNotFound() {
         http_response_code(404);
@@ -113,6 +114,14 @@
             $wine["color"] = $row["color"];
 
             echo json_encode($wine);
+        } else if($method == "POST" && $uri == "/favorite") {
+            $stmt = $db->prepare("insert into favorite values(:userId, :wineId)");
+            $stmt->bindValue("userId", $sessionUid);
+            $stmt->bindValue("wineId", $input->id);
+
+            if(!$stmt->execute()) {
+                http_response_code(500);
+            }
         } else {
             echoNotFound();
         }
