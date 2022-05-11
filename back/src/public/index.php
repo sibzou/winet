@@ -9,12 +9,11 @@
 
     $db = new SQLite3("../../db");
 
-    function executeSql($stmt) {
-        if($stmt->execute()) {
-            http_response_code(200);
-        } else {
-            http_response_code(500);
-        }
+    $stmt = $db->query("delete from session where start + " . (60 * 20) . " < unixepoch()");
+
+    function echoNotFound() {
+        http_response_code(404);
+        echo "Not found\n";
     }
 
     if($method == "POST" && $uri == "/signup") {
@@ -24,7 +23,11 @@
         $stmt->bindValue("username", $input->username);
         $stmt->bindValue("password", $passwordHash);
 
-        executeSql($stmt);
+        if($stmt->execute()) {
+            http_response_code(200);
+        } else {
+            http_response_code(500);
+        }
     } else if($method == "POST" && $uri == "/signin") {
         $stmt = $db->prepare("select id, password from user where name = :username");
         $stmt->bindValue("username", $input->username);
@@ -50,7 +53,43 @@
             http_response_code(500);
         }
     } else {
-        http_response_code(404);
-        echo "Not found\n";
+        $stmt = $db->prepare("select userId from session where token = :token");
+        $stmt->bindValue("token", $input->token);
+
+        $res = $stmt->execute();
+        $row = $res->fetchArray();
+        $sessionUid = $row["userId"];
+
+        $stmt = $db->prepare("update session set start = unixepoch() where userId = :userId");
+        $stmt->bindValue("userId", $sessionUid);
+        $stmt->execute();
+
+        if(!isset($sessionUid)) {
+            echoNotFound();
+            return;
+        }
+
+        if($method == "GET" && $uri == "/search") {
+            $stmt = $db->prepare("select wine.id, wine.name as name, category.name as category from wine, category where wine.categoryId = category.id and wine.name like :query");
+            $stmt->bindValue("query", "%" . $input->query . "%");
+
+            $res = $stmt->execute();
+            $searchArray = [];
+            $row = $res->fetchArray();
+
+            while($row) {
+                $wine = [];
+                $wine["id"] = $row["id"];
+                $wine["name"] = $row["name"];
+                $wine["category"] = $row["category"];
+
+                $searchArray[] = $wine;
+                $row = $res->fetchArray();
+            }
+
+            echo json_encode($searchArray);
+        } else {
+            echoNotFound();
+        }
     }
 ?>
