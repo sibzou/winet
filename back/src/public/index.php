@@ -113,6 +113,13 @@
             $wine["vineyard"] = $row["vineyard"];
             $wine["color"] = $row["color"];
 
+            $stmt = $db->prepare("select avg(rate) as rate from rate where wineId = :wineId");
+            $stmt->bindValue("wineId", $input->id);
+
+            $res = $stmt->execute();
+            $row = $res->fetchArray();
+            $wine["rate"] = $row["rate"];
+
             echo json_encode($wine);
         } else if($method == "POST" && $uri == "/favorite") {
             $stmt = $db->prepare("insert into favorite values(:userId, :wineId)");
