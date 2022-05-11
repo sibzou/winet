@@ -23,9 +23,7 @@
         $stmt->bindValue("username", $input->username);
         $stmt->bindValue("password", $passwordHash);
 
-        if($stmt->execute()) {
-            http_response_code(200);
-        } else {
+        if(!$stmt->execute()) {
             http_response_code(500);
         }
     } else if($method == "POST" && $uri == "/signin") {
@@ -47,7 +45,6 @@
         $stmt->bindValue("token", $token);
 
         if($stmt->execute()) {
-            http_response_code(200);
             echo $token;
         } else {
             http_response_code(500);
@@ -70,7 +67,7 @@
         }
 
         if($method == "GET" && $uri == "/search") {
-            $stmt = $db->prepare("select wine.id, wine.name as name, category.name as category from wine, category where wine.categoryId = category.id and wine.name like :query");
+            $stmt = $db->prepare("select wine.id, wine.name as name, category.name as category from wine, category, vineyard, color where wine.categoryId = category.id and wine.vineyardId = vineyard.id and wine.colorId = color.id and (wine.name like :query or vineyard.name like :query or color.name like :query)");
             $stmt->bindValue("query", "%" . $input->query . "%");
 
             $res = $stmt->execute();
