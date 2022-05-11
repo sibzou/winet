@@ -70,3 +70,10 @@ insert into color(name) values("or"),
                               ("roux"),
                               ("jaune paille"),
                               ("tuilé");
+
+insert into vineyard(name) values("Famille Bernard"),
+                                 ("Michel Gassier");
+
+insert into wine(name, categoryId, vineyardId, colorId) values("Beaujolais nouveau", 1, 1, 3),
+                                                              ("Les quatre ponts", 3, 2, 6),
+                                                              ("Château Ausone", 2, 2, 5);
