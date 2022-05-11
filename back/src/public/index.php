@@ -9,6 +9,7 @@
     $input = json_decode($inputJson);
 
     $db = new SQLite3("../../db");
+    $db->query("pragma foreign_keys = on");
 
     function echoNotFound() {
         http_response_code(404);
@@ -112,7 +113,93 @@
             $wine["vineyard"] = $row["vineyard"];
             $wine["color"] = $row["color"];
 
+            $stmt = $db->prepare("select avg(rate) as rate from rate where wineId = :wineId");
+            $stmt->bindValue("wineId", $input->id);
+
+            $res = $stmt->execute();
+            $row = $res->fetchArray();
+            $wine["rate"] = $row["rate"];
+
             echo json_encode($wine);
+        } else if($method == "POST" && $uri == "/favorite") {
+            $stmt = $db->prepare("insert into favorite values(:userId, :wineId)");
+            $stmt->bindValue("userId", $sessionUid);
+            $stmt->bindValue("wineId", $input->id);
+
+            if(!$stmt->execute()) {
+                http_response_code(500);
+            }
+        } else if($method == "POST" && $uri == "/addvineyard") {
+            $stmt = $db->prepare("insert into vineyard(name) values(:name)");
+            $stmt->bindValue("name", $input->name);
+
+            if(!$stmt->execute()) {
+                http_response_code(500);
+            }
+        } else if($method == "POST" && $uri == "/addcategory") {
+            $stmt = $db->prepare("insert into category(name) values(:name)");
+            $stmt->bindValue("name", $input->name);
+
+            if(!$stmt->execute()) {
+                http_response_code(500);
+            }
+        } else if($method == "GET" && $uri == "/addwinedetails") {
+            $res = $db->query("select * from category");
+            $categories = [];
+            $row = $res->fetchArray();
+
+            while($row) {
+                $categ = [];
+                $categ["id"] = $row["id"];
+                $categ["name"] = $row["name"];
+
+                $categories[] = $categ;
+                $row = $res->fetchArray();
+            }
+
+            $res = $db->query("select * from vineyard");
+            $vineyards = [];
+            $row = $res->fetchArray();
+
+            while($row) {
+                $viney = [];
+                $viney["id"] = $row["id"];
+                $viney["name"] = $row["name"];
+
+                $vineyards[] = $viney;
+                $row = $res->fetchArray();
+            }
+
+            $res = $db->query("select * from color");
+            $colors = [];
+            $row = $res->fetchArray();
+
+            while($row) {
+                $colo = [];
+                $colo["id"] = $row["id"];
+                $colo["name"] = $row["name"];
+
+                $colors[] = $colo;
+                $row = $res->fetchArray();
+            }
+
+            $details = [];
+            $details["categories"] = $categories;
+            $details["vineyards"] = $vineyards;
+            $details["colors"] = $colors;
+
+            echo json_encode($details);
+        } else if($method == "POST" && $uri == "/addwine") {
+            $stmt = $db->prepare("insert into wine(name, categoryId, vineyardId, colorId) values(:name, :categoryId, :vineyardId, :colorId)");
+
+            $stmt->bindValue("name", $input->name);
+            $stmt->bindValue("categoryId", $input->categoryId);
+            $stmt->bindValue("vineyardId", $input->vineyardId);
+            $stmt->bindValue("colorId", $input->colorId);
+
+            if(!$stmt->execute()) {
+                http_response_code(500);
+            }
         } else {
             echoNotFound();
         }
