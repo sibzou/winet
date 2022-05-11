@@ -100,6 +100,24 @@
             if(!$stmt->execute()) {
                 http_response_code(500);
             }
+        } else if($method == "GET" && $uri == "/wine") {
+            $stmt = $db->prepare("select wine.name, category.name as category, vineyard.name as vineyard, color.name as color from wine, category, vineyard, color where wine.id = :wineId and category.id = wine.categoryId and vineyard.id = wine.vineyardId and color.id = wine.colorId");
+            $stmt->bindValue("wineId", $input->id);
+
+            $res = $stmt->execute();
+            $row = $res->fetchArray();
+
+            if(!$row) {
+                http_response_code(500);
+                return;
+            }
+
+            $wine["name"] = $row["name"];
+            $wine["category"] = $row["category"];
+            $wine["vineyard"] = $row["vineyard"];
+            $wine["color"] = $row["color"];
+
+            echo json_encode($wine);
         } else {
             echoNotFound();
         }
