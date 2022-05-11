@@ -1,4 +1,6 @@
 <?php
+    header('Access-Control-Allow-Origin: http://localhost:3000');
+
     $method = $_SERVER["REQUEST_METHOD"];
     $uri = $_SERVER["REQUEST_URI"];
 
