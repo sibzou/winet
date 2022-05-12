@@ -47,7 +47,7 @@ export default function Home(props) {
             <Topbar onSearchChange={onSearchChange}/>
             <div className="homeContainer">
                 <Sidebar/>
-                <Feed searchResults={searchResults}/>
+                <Feed searchResults={searchResults} token={props.token} removeSearchResultsCallback={() => setSearchResults(null)}/>
                 <Rightbar/>
             </div>
         </>

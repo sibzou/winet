@@ -96,7 +96,7 @@
             if(!$stmt->execute()) {
                 http_response_code(500);
             }
-        } else if($method == "GET" && $uri == "/wine") {
+        } else if($method == "POST" && $uri == "/wine") {
             $stmt = $db->prepare("select wine.name, category.name as category, vineyard.name as vineyard, color.name as color from wine, category, vineyard, color where wine.id = :wineId and category.id = wine.categoryId and vineyard.id = wine.vineyardId and color.id = wine.colorId");
             $stmt->bindValue("wineId", $input->id);
 
