@@ -104,6 +104,10 @@ export default function FormLogin(props) {
                 </button>
             </form>
 
+            <button onClick={props.goToRegister} className="btn" type="submit">
+                Register
+            </button>
+
             {/* Calling to the methods */}
             <div className="messages">
                 {errorMessage()}
