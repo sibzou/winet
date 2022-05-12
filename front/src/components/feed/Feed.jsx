@@ -13,10 +13,7 @@ export default function Feed(props){
 
     return (
         <div className="feed">
-            <div className="feedWrapper">
-                {searchResultsNodes}
-            </div>
+            {searchResultsNodes}
         </div>
-
     )
 }

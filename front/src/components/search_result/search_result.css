@@ -1,0 +1,14 @@
+.search-result {
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+
+.search-result .name {
+    font-size:  1.2rem;
+    margin-bottom: 0.1rem;
+}
+
+.search-result .category {
+    color: #606060;
+    margin-top: 0rem;
+}

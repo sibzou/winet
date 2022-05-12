@@ -8,31 +8,38 @@ import "./Home.css";
 export default function Home(props) {
     const [stopTypeTimer, setStopTypeTimer] = useState();
     const [searchResults, setSearchResults] = useState(null);
-
-    const onStopType = async text => {
-        const xhr = new XMLHttpRequest();
-
-        const response = await fetch("http://localhost:8080/search", {
-            method: "POST",
-            body: JSON.stringify({
-                token: props.token,
-                query: text
-            })
-        });
-
-        const results = await response.json();
-        setSearchResults(results);
-        console.log(results);
-    }
+    const [searchXhr, setSearchXhr] = useState();
 
     const onSearchChange = text => {
+        clearTimeout(stopTypeTimer);
+        if(searchXhr) searchXhr.abort();
+
         if(text == "") {
             setSearchResults(null);
         } else {
-            clearTimeout(stopTypeTimer);
             const timer = setTimeout(onStopType, 500, text);
             setStopTypeTimer(timer);
         }
+    }
+
+    const onStopType = text => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost:8080/search");
+        xhr.onload = onSearchDone;
+
+        const searchQuery = {
+            token: props.token,
+            query: text
+        };
+
+        xhr.send(JSON.stringify(searchQuery));
+        setSearchXhr(xhr);
+    }
+
+    const onSearchDone = event => {
+        const xhr = event.target;
+        const results = JSON.parse(xhr.responseText);
+        setSearchResults(results);
     }
 
     return (
