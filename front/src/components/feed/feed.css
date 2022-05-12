@@ -2,3 +2,25 @@
     flex: 5.5;
     padding: 20px;
 }
+
+.rate-buttons {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.rate-buttons p {
+    margin-right: 1rem;
+    background-color: #4848FF;
+    color: white;
+    padding: 1rem;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.favorite-button {
+    padding: 0.5rem 1rem;
+    background-color: #FF4949;
+    display: inline-block;
+    color: white;
+    cursor: pointer;
+}
