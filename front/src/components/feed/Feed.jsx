@@ -2,8 +2,9 @@ import "./feed.css";
 import Post from "../post/Post";
 import SearchResult from "../search_result/search_result";
 import {useState} from "react";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-export default function Feed(props){
+export default function Feed(props) {
     const searchResultsNodes = [];
     const [currentWineId, setCurrentWineId] = useState();
     const [currentWine, setCurrentWine] = useState(null);
@@ -53,8 +54,8 @@ export default function Feed(props){
         xhr.send(JSON.stringify(favoriteReq));
     }
 
-    if(props.searchResults) {
-        for(let res of props.searchResults) {
+    if (props.searchResults) {
+        for (let res of props.searchResults) {
             searchResultsNodes.push(<SearchResult wine={res} onClick={() => fetchWine(res.id)}/>);
         }
 
@@ -63,27 +64,42 @@ export default function Feed(props){
                 {searchResultsNodes}
             </div>
         )
-    } else if(currentWine != null) {
+    } else if (currentWine != null) {
         const rateNodes = [];
 
-        for(let i = 0; i <= 10; i++) {
+        for (let i = 0; i <= 10; i++) {
             rateNodes.push(<p onClick={() => sendRate(i)}>{i}</p>);
         }
 
         return (
-            <div>
-                <p>{currentWine.name}</p>
-                <p>{currentWine.category}</p>
-                <p>{currentWine.vineyard}</p>
-                <p>{currentWine.color}</p>
-                {currentWine.rate &&
-                <p>{currentWine.rate}/10</p>
-                }
-                <p>Notez le vin :</p>
-                <div className="rate-buttons">
-                    {rateNodes}
+            <div className="detail">
+                <div className="postWrapper">
+                    <div className="postTop">
+                        <div className="postText">
+                            <div>Name : {currentWine.name}</div>
+                            <div>Category : {currentWine.category}</div>
+                            <div>Vineyard : {currentWine.vineyard}</div>
+                            <div>Color : {currentWine.color}</div>
+                            <div>Rate : {currentWine.rate}/10</div>
+                        </div>
+                    </div>
+                    <div className="postCenter">
+                        <img className="postImg" src="assets/post/1.jpg" alt=""/>
+                    </div>
+                    <div className="rate-buttons">
+                        {rateNodes}
+                    </div>
+                    <div className="postBottom">
+                            <div className="postBottomLeft">
+                                <img className="likeIcon" src="assets/heart.png" alt=""/>
+                                <span className="postLikeCounter"
+                                      onClick={() => favoriteWine()}>Add to favorite</span>
+                            </div>
+                            <div className="postBottomRight">
+                                <span className="postCommentText">5 comments</span>
+                            </div>
+                    </div>
                 </div>
-                <div className="favorite-button" onClick={() => favoriteWine()}>Ajouter aux coups de cœur</div>
             </div>
         )
     }

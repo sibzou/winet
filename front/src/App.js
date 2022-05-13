@@ -5,10 +5,7 @@ import {useState} from "react";
 function App() {
   const [token, setToken] = useState(null);
 
-  console.log(token);
-
   if (token!=null) {
-    console.log(token)
     return <Home token={token}/>;
   } else {
     return <Login setTokenCallback={setToken} />;

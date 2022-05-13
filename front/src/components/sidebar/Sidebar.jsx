@@ -41,7 +41,6 @@ export default function Sidebar(){
                         </span>
                     </li>
                 </ul>
-                <button className="sidebarButton">Show More</button>
             </div>
         </div>
 
